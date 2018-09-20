@@ -1,0 +1,69 @@
+html,
+body { height: 100%; padding: 0; margin: 0; }
+*{padding: 0px;
+margin: 0px;}
+
+div{
+
+  background-color:rgba(2, 136, 209,0);
+
+}
+.out{
+
+	background-color:rgba(255, 255, 255,0.6);
+	height: 25vh;
+	width: 70%;
+	margin-left: 25%;
+	margin-top:3vh; 
+	
+	font-size: 20px;
+	line-height: 2vh;
+}
+.p{
+  
+	text-align:center;
+}
+.left{
+	float: left;
+	margin-top:2vh; 
+	margin-left:0px; 
+	height: 20vh;
+	width: 60%;
+	border-radius: 30px;
+background-color:rgba(220,38,38,0);
+
+
+}
+img{
+    float: right;
+   height: 22px;
+   width: 100px;
+
+}
+.right{
+
+float:right;
+height: 25vh;
+margin-right:5%; 
+	width: 35%;
+	background-color:rgba(220,38,38,0);
+	 background-repeat: no-repeat;
+  background-size:100% 100% ;
+
+}
+.choic{
+	background-color: white;
+	float: left;
+    margin-top:0vh;
+    margin-left:10%;  
+	height: 4vh;
+	width: 47%;
+	font-size: 1.8vh;
+	border-radius: 1vh;
+}
+.hua{
+
+	width: 100%;
+	height: 100%;
+
+}

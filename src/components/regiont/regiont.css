@@ -1,0 +1,53 @@
+html,
+body { height: 100%; padding: 0; margin: 0; }
+*{padding: 0px;
+margin: 0px;}
+
+.choice{
+  height: 90vh;
+  width: 100%;
+ text-align: center; 
+
+}
+.putout{
+        
+     
+         
+}
+.putin{    font-size: 18px;
+         left: 30%;
+          top:6vh; 
+      width: 40%;
+      height: 30vh;
+      position: absolute;
+
+       /*background-color: rgba(255,255,255,1); */
+     
+}
+.dai{
+    margin-left:0; 
+  display: inline;
+}
+.ant-input{
+     background-color: black;
+   height: 12vh;
+   position: absolute;
+   width: 200px;
+
+}
+.category{
+  
+ position: absolute;
+ margin-top:0.1px;
+ margin-left:-319px;  
+width: 300px;
+height: 27px;
+
+
+}
+.putin  .span{
+
+
+  position: absolute;
+  left: 0px;
+}

@@ -1,0 +1,75 @@
+html,
+body { height: 100%; padding: 0; margin: 0; }
+*{padding: 0px;
+margin: 0px;}
+
+.ichoice{
+  height: 90vh;
+  width: 100%;
+  
+
+}
+.iputout{
+         left: 20%;
+         top:5vh;
+      width: 60%;
+      height: 90vh;
+      position: absolute;
+      text-align: center;
+   
+         
+}
+
+.crfid{
+         left: 20%;
+         top:60vh;
+      width: 60%;
+      height: 30vh;
+      position: absolute;
+     
+   
+         
+}
+.crfidin{    font-size: 18px;
+         left: 25%;
+          top:5vh; 
+      width: 60%;
+      height: 30vh;
+      position: absolute;
+
+       /*background-color: rgba(255,255,255,1); */
+     
+}
+td{
+
+  width: 100px;
+  height: 40px;
+
+}
+.ictitle{
+   margin-left:0px;
+  font-size: 30px;
+  color: blue;
+
+
+}
+.pagination{
+
+      position: absolute;
+     top:30vh; 
+  float: left;
+  left: 50%;
+   transform: translate(-50%,-50%);
+::-webkit-scrollbar {display:none}
+}
+.wangdou{
+
+
+
+  position: absolute;
+  height: 30vh;
+  width: 100%;
+  overflow: scroll;
+
+}
+.wangdou::-webkit-scrollbar {display:none}

@@ -1,0 +1,120 @@
+html,
+body { height: 100%; padding: 0; margin: 0; }
+*{padding: 0px;
+margin: 0px;}
+.background{
+  min-width: 1000px;
+ margin-top: 200px;
+height:500px;
+position: absolute;
+ background-image: url('../../image/kidde.jpg'); 
+   background-repeat: no-repeat;
+  background-size:100% 100% ;
+width: 100%;
+}
+.login{
+    height:100vh;
+width: 100%;
+position: absolute;
+margin-top: 0px;
+margin-left: 0px;
+ overflow: scroll;
+/*background: -webkit-linear-gradient(#ffffff, #666666); 
+    background: -o-linear-gradient(#ffffff, #666666); 
+    background: -moz-linear-gradient(#ffffff, #666666); 
+    background: linear-gradient(#ffffff, #666666); */
+   background-color: black;
+}
+.board{
+ 
+            height:400px;
+           
+            position:absolute;/*设定水平和垂直偏移父元素的50%，
+再根据实际长度将子元素上左挪回一半大小*/
+           right:100px;
+            
+            margin-left: 0px;
+            margin-top: 50px;
+            background-color: white; 
+            border-radius: 10px;
+            background-color:rgba(255,255,255,1);
+            width:350px;
+}
+.boardin{
+  width:80%;
+            height:360px;
+            margin:auto 0;
+            position:absolute;
+          
+          margin-left: 10%;
+            margin-top: 20px;
+          background-color:rgba(255,255,255,0);
+          font-size: 0.9rem;
+}
+.logo{
+      width: 100px;
+      height: 50px;
+ margin-left: 5%;
+    float: left;
+   background-image: url('../../image/logo.png'); 
+   background-repeat: no-repeat;
+  background-size:100% 100% ;
+  
+           
+      
+}
+.title{
+     color: rgb(255,255, 255);
+     height: 50px;
+     line-height: 50px;
+    margin-left: 10px;
+    float: left;
+    font-size: 24px;
+    font-weight: 900;
+
+
+}
+.account,.password
+{   width: 100%;
+   background-color:rgba(220,38,38,0);
+}
+.copyright{
+margin-left: 0px;
+width: 100%; 
+line-height: 60px; 
+color: rgb(0, 0, 0); 
+text-align: center; 
+font-size: 14px; 
+margin-bottom: 0px; 
+overflow: hidden; 
+white-space: nowrap; 
+margin-top: 20px;
+font-weight: 700; 
+
+}
+.hhh{
+  
+  line-height: 60px;
+   font-weight: 700;
+}
+.account,.password{
+display: inline-block;
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid rgb(192, 192, 192);
+    margin: 0px auto;
+    text-indent: 20px;
+    outline: 0px;
+    background: transparent;
+
+
+}
+.lheader{
+   min-width: 1000px;
+    position:absolute;
+    top:30px;
+  height: 50px;
+  width: 100%;
+  background-color: rgb(0,0,0);
+}
