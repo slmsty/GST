@@ -436,7 +436,7 @@ const options = [{
 
 
     return (
-          <div  className="invoice">
+          <div  >
           <div>
           
             

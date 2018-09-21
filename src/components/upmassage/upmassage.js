@@ -150,7 +150,7 @@ showUploadList:false,
 
 
 
-    return (<div  className="upload">
+    return (<div  >
         <div   className="inupload">
           &nbsp;&nbsp;&nbsp;
   {sessionStorage.getItem('upload')==1?     <Upload {...props}>

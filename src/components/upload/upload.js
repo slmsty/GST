@@ -113,7 +113,7 @@ showUploadList:false,
 
 
 
-    return (<div  className="upload">
+    return (<div  >
         <div   className="inupload">
             <Upload {...props}>
     <Button>

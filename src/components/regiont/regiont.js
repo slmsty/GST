@@ -562,7 +562,7 @@ const options = [{
 
 
     return (
-          <div  className="invoice">
+          <div  >
           <div>
             
              <Select id="map"  style={{'width':'150px'}} defaultValue="0" onChange={this.map}>

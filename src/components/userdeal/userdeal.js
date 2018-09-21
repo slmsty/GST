@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {BrowserRouter,Link} from "react-router-dom";
 
-import {Icon,Pagination,DatePicker,Input, Button,message,Modal,Spin,Table, Divider, Tag,Cascader} from 'antd'
+import {Icon,Pagination,DatePicker,Input, Button,Select,message,Modal,Spin,Table, Divider, Tag,Cascader} from 'antd'
 import axios from 'axios'
 import {url} from '../config'
 import "./userdeal.css";
 
-
+const Option = Select.Option;
     
 
 class userdeal extends Component {
@@ -26,17 +26,56 @@ constructor(){
       xuhao:0,
       fan:true,
       data:[],
+      data2:[],
+      data3:[],
       update:'',
+      organization:[],
+      role:[],
 
     }
   
   }
   
   componentDidMount(){
-  
-   
-      // let  c=document.querySelector("#chandi");
-      // c.option.add(new Option("22","22"));
+  axios.get(`${url}/role/getlist`)
+   .then(res=>{
+      
+          
+            this.setState({
+             data2:res.data,
+            });
+       
+        })
+        .catch(err=>console.log(err))
+    axios.get(`${url}/organization/getlist`)
+   .then(res=>{
+       console.log(res);
+       let c=[];  
+        c.push(res.data[0]);
+          res.data[0].children.map((item,index)=>{
+                c.push(item);  
+          
+             item.children.map((ite,index)=>{
+
+              c.push(ite);
+
+             })
+        
+        
+         
+
+          })
+            
+           
+            this.setState({
+            
+             data3:c,
+             
+            });
+       
+        })
+        .catch(err=>console.log(err))
+     
       let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
   
    axios.get(`${url}/account/getlist`)
@@ -44,11 +83,67 @@ constructor(){
        console.log(res);
        let c=[];  
           res.data.map((item,index)=>{
-                 
+
+                let d=[];
+                let e=[];
+                if( item.organizationList.length==0){}else{
+
+                        item.organizationList.map((item,index)=>{
+
+                                      let  organ=item;
+                                   this.state.data3.map((ite,index)=>{
+
+
+                                          if(ite.id==organ){
+
+                                              d.push(ite.name)
+
+                                          }
+                                            
+
+                                   })
+
+
+
+
+
+                        })
+
+
+
+                }
+               if( item.roleList.length==0){}else{
+
+                        item.roleList.map((item,index)=>{
+
+                                      let  organ=item;
+                                   this.state.data2.map((ite,index)=>{
+
+
+                                          if(ite.id==organ){
+
+                                              e.push(ite.name)
+
+                                          }
+                                            
+
+                                   })
+
+
+
+
+
+                        })
+
+
+
+                }
               let  putin={
                 idx:c.length+1,
                 key:(c.length+1).toString(),  
                  name: item.name,
+                 organ:d,
+                 roleList:e,
                  userName:item.userName,
               phoneNo: item.phoneNo,
               region:'GST',
@@ -128,15 +223,21 @@ constructor(){
          password: password,
          phoneNo: phoneNo,
          eMail: eMail,
+        organizationList:this.state.organization,
+        roleList:this.state.role,
+
+
   
 }
 
-     axios.post(`${url}/account/addAccount`,data)
+     axios.post(`${url}/Account/AddAccount`,data)
    .then(res=>{
     alert('用户添加成功')
       
             this.setState({
       visible: false,
+      organizationList:[],
+      roleList:[],
 
     });
        window.location.reload(true);
@@ -180,6 +281,8 @@ if(old.test(password)==false){
   phoneNo: phoneNo,
   eMail: eMail,
   id:this.state.update,
+  organizationList:this.state.organization,
+        roleList:this.state.role,
 }
 axios.post(`${url}/account/update`,data)
    .then(res=>{
@@ -188,6 +291,8 @@ axios.post(`${url}/account/update`,data)
         this.setState({
       visible1: false,
       update:'',
+      organizationList:[],
+      roleList:[],
        });
           window.location.reload(true);
         })
@@ -213,56 +318,16 @@ handleCancel2=()=>{
 
 
  }
- radioclick=()=>{
-      let checked = sessionStorage.getItem('checked');
-     let  point=document.querySelector(".red") ;
-        if(checked==1){
-        
-               point.checked=false;
-               sessionStorage.setItem('checked',0);
-          
-        }
-        else{
-        
-            point.checked=true;
-               sessionStorage.setItem('checked',1);
-              
-        }
-
- }
+ 
 getCookie=(name)=>//取cookies函数        
 {   
     var arr = document.cookie.match(new RegExp("(^| )"+name+"=([^;]*)(;|$)"));
     if(arr != null) return unescape(arr[2]); return null;
 }
-zhu=()=>{
-   
-     
-       sessionStorage.setItem('choice',1);
-      this.props.history.push("./main");   
-}
-tui=()=>{
-   
-    this.props.history.push("./");     
 
 
-}
 
 
-fenye=(event)=>{
-
-  
-    let c=event-1;
-    let d=c*10;
-
-     this.setState({
-     
-     fendata:this.state.invodata.slice(d,d+10),
-     xuhao:d,
-      
-    })  
-
-}
 zhansh=(orderNo)=>{
 
        sessionStorage.setItem('orderNo',orderNo);
@@ -275,92 +340,7 @@ zhansh=(orderNo)=>{
 
 }
 
-group=()=>{
- let  d=[];
-     let   c=document.querySelector('.search').value
-      let value=document.querySelector('#idSelect').value;
-      if(value==1){
-        let cid=document.cookie.match(new RegExp("(^| )pcompany=([^;]*)(;|$)"));
-           axios.get(`${url}/account/getlist`)
-   .then(res=>{
-        
-       this.setState({
-     invodata:res.data,
-    
-    });  
-    this.state.invodata.map((item,index)=>
 
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-
-         
-        })
-        .catch(err=>console.log(err))
-
-      }
-     else if(value==2){
-        axios.get(`${url}/Invoice/getListNoGroup?id=1`)
-   .then(res=>{
-        
-       this.setState({
-     invodata:res.data,
-  
-      
-    });  
-    this.state.invodata.map((item,index)=>
-
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-
-         
-        })
-        .catch(err=>console.log(err))
-     }
-     else if(value==0){
-      let cid=document.cookie.match(new RegExp("(^| )pcompany=([^;]*)(;|$)"));
-           axios.get(`${url}/Invoice/getListByCompanyID?id=${unescape(cid[2])}`)
-   .then(res=>{
-      
-        this.setState({
-     invodata:res.data,
-  
-      
-    }); 
- 
-    this.state.invodata.map((item,index)=>
-
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-       
-        })
-        .catch(err=>console.log(err))
-
-     }
-    
-     
-
-}
 update=(value)=>{
 
    // console.log( this.state.data);
@@ -399,6 +379,22 @@ remove=(value)=>{
 
 
 
+}
+handleChange=(value)=>{
+    this.setState({
+            
+            role:value,
+             
+            });
+    console.log(this.state.role);
+}
+handleChange1=(value)=>{
+  this.setState({
+            
+            organization:value,
+             
+            });
+  console.log(this.state.organization);
 }
 upload=(value)=>{
 
@@ -444,15 +440,21 @@ useradd=()=>{
   title: '电话',
   dataIndex: 'phoneNo',
   key: 'phoneNo',
-}, {
-  title: '所在机构',
-  dataIndex: 'region',
-  key: 'region',
-}, {
-  title: '角色',
-  dataIndex: 'region',
-  key: 'region',
-},  {
+}, {title: '组织机构',
+  key: 'organ',
+  dataIndex: 'organ',
+  render: organ => (
+    <span>
+      {organ.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
+    </span>
+  )},{title: '角色',
+  key: 'roleList',
+  dataIndex: 'roleList',
+  render: roleList => (
+    <span>
+      {roleList.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
+    </span>
+  )},  {
   title: '操作',
   key: 'action',
   render: (text, record) => (
@@ -490,7 +492,7 @@ const options = [{
 
 
     return (
-          <div  className="invoice">
+          <div >
           <div>
             
           <Button   onClick={this.useradd.bind()}>添加新用户</Button> &nbsp;  <a   onClick={this.upload.bind(this,1)} >文档导入</a>
@@ -502,22 +504,51 @@ const options = [{
                 visible={this.state.visible}
                 onOk={this.handleOk}
                 onCancel={this.handleCancel}
-                width='350px'
+                width='500px'
                 okText='确定'
             cancelText='取消'>
             <div  className="add-user">
-                <p style={{'lineHeight':'40px','textAlign':'left'}}>账号：
-              <Input type="text" style={{'lineHeight':'30px','width':'200px','marginLeft':'13px'}}  className='account'/></p>
-            <p style={{'lineHeight':'40px','textAlign':'left'}}>密码：&nbsp;&nbsp;
+                <p style={{'lineHeight':'40px','textAlign':'left'}}>账号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='account'/></p>
+            <p style={{'lineHeight':'40px','textAlign':'left'}}>密码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="password" style={{'lineHeight':'30px','width':'200px'}}  className='password'/></p>
-             <p style={{'lineHeight':'40px','textAlign':'left'}}>电话：&nbsp;&nbsp;
+             <p style={{'lineHeight':'40px','textAlign':'left'}}>电话：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='phoneNo'/></p>
-               <p style={{'lineHeight':'40px','textAlign':'left'}}>E-Mail：
+               <p style={{'lineHeight':'40px','textAlign':'left'}}>E-Mail：&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='email'/></p>
-              <p style={{'lineHeight':'40px','textAlign':'left'}}>姓名：&nbsp;&nbsp;
+              <p style={{'lineHeight':'40px','textAlign':'left'}}>姓名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='name'/></p>
-               <p style={{'lineHeight':'40px','textAlign':'left'}}>工号：
+               <p style={{'lineHeight':'40px','textAlign':'left'}}>工号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='employeeNumber'/></p>
+                 <p style={{'lineHeight':'40px','textAlign':'left'}}>角色：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <Select
+                mode="multiple"
+                 style={{ width: '200px' }}
+                 placeholder="请选择角色"
+   
+                 onChange={this.handleChange}
+              >
+                { this.state.data2.map((item,index)=>
+
+                     <Option key={index} value={item.id}>{item.name}</Option>
+
+                    )}
+                  </Select>
+              </p>
+              <p style={{'lineHeight':'40px','textAlign':'left'}}>组织机构：
+              <Select
+                mode="multiple"
+                 style={{ width: '200px' }}
+                 placeholder="请选择组织机构"
+   
+                 onChange={this.handleChange1}
+              >
+                { this.state.data3.map((item,index)=>
+                     index=='0'?  '':<Option key={index} value={item.id}>{item.name}</Option>
+
+                    )}
+                  </Select>
+              </p>
               </div>
               </Modal>
               {this.state.update==''? '':
@@ -533,22 +564,52 @@ const options = [{
                 visible={this.state.visible1}
                 onOk={this.handleOk2}
                 onCancel={this.handleCancel2}
-                width='350px'
+                width='500px'
                 okText='确定'
                   cancelText='取消'>
                 <div  className="add-user">
-                <p style={{'lineHeight':'40px','textAlign':'left'}}>账号：
-                <Input type="text" style={{'lineHeight':'30px','width':'200px','marginLeft':'13px'}} defaultValue={item.userName} className='account2'/></p>
-              <p style={{'lineHeight':'40px','textAlign':'left'}}>密码：&nbsp;&nbsp;&nbsp;&nbsp;
+                <p style={{'lineHeight':'40px','textAlign':'left'}}>账号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Input type="text" style={{'lineHeight':'30px','width':'200px'}} defaultValue={item.userName} className='account2'/></p>
+              <p style={{'lineHeight':'40px','textAlign':'left'}}>密码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="password" style={{'lineHeight':'30px','width':'200px'}}  className='password2' defaultValue={item.password}/></p>
-              <p style={{'lineHeight':'40px','textAlign':'left'}}>电话：&nbsp;&nbsp;&nbsp;&nbsp;
+              <p style={{'lineHeight':'40px','textAlign':'left'}}>电话：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='phoneNo2'  defaultValue={item.phoneNo}/></p>
-               <p style={{'lineHeight':'40px','textAlign':'left'}}>E-Mail：&nbsp;
+               <p style={{'lineHeight':'40px','textAlign':'left'}}>E-Mail：&nbsp;&nbsp;&nbsp;&nbsp;
                <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='email2' defaultValue={item.eMail}/></p>
-                <p style={{'lineHeight':'40px','textAlign':'left'}}>姓名：&nbsp;&nbsp;
+                <p style={{'lineHeight':'40px','textAlign':'left'}}>姓名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='name2'  defaultValue={item.name}/></p>
-               <p style={{'lineHeight':'40px','textAlign':'left'}}>工号：
+               <p style={{'lineHeight':'40px','textAlign':'left'}}>工号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='employeeNumber2'  defaultValue={item.employeeNumber}/></p>
+              <p style={{'lineHeight':'40px','textAlign':'left'}}>角色：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <Select
+                mode="multiple"
+                 style={{ width: '200px' }}
+                 placeholder="请选择角色"
+   
+                 onChange={this.handleChange}
+              >
+                { this.state.data2.map((item,index)=>
+
+                     <Option key={index} value={item.id}>{item.name}</Option>
+
+                    )}
+                  </Select>
+              </p>
+              <p style={{'lineHeight':'40px','textAlign':'left'}}>组织机构：
+              <Select
+                mode="multiple"
+                 style={{ width: '200px' }}
+                 placeholder="请选择组织机构"
+   
+                 onChange={this.handleChange1}
+              >
+                { this.state.data3.map((item,index)=>
+
+                       index=='0'?  '':<Option key={index} value={item.id}>{item.name}</Option>
+
+                    )}
+                  </Select>
+              </p>
                </div>
                </Modal>:''
        

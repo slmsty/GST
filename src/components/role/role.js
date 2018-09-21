@@ -28,13 +28,23 @@ constructor(){
       data:[],
       update:'',
       role:[],
+      organization:[],
 
     }
   
   }
   
   componentDidMount(){
-  
+       axios.get(`${url}/Role/GetRightsList`)
+   .then(res=>{
+         console.log(res);
+        this.setState({
+             role:res.data,
+
+        });
+        
+        })
+        .catch(err=>console.log(err))
    
       // let  c=document.querySelector("#chandi");
       // c.option.add(new Option("22","22"));
@@ -45,11 +55,33 @@ constructor(){
        console.log(res);
        let c=[];  
           res.data.map((item,index)=>{
-                 
+
+                        let   rol=[];
+                      if(item.rightList!=undefined){
+                    item.rightList.map((ite,index)=>{
+                            
+                                let  as=ite;
+                           this.state.role.map((itm,index)=>{
+
+                                        if(as==itm.id){
+
+                                            rol.push(itm);
+
+
+                                        }
+
+
+
+
+                   }) 
+
+                    })   
+                  }
+                   
               let  putin={
                 key:(c.length+1).toString(),  
                  role: item.name,
-             
+                 rightList:rol,
                 id:item.id,
                  idx:c.length+1,
                  
@@ -65,16 +97,7 @@ constructor(){
        
         })
         .catch(err=>console.log(err))
-         axios.get(`${url}/Role/GetRightsList`)
-   .then(res=>{
-         
-        this.setState({
-             role:res.data,
-
-        });
         
-        })
-        .catch(err=>console.log(err))
 
    //      axios.get(`${url}/organization/getlist`)
    // .then(res=>{
@@ -89,17 +112,38 @@ constructor(){
   }
  
  getlist=()=>{
-
-     axios.get(`${url}/role/getlist`)
+axios.get(`${url}/role/getlist`)
    .then(res=>{
        console.log(res);
        let c=[];  
           res.data.map((item,index)=>{
-                 
+
+                        let   rol=[];
+                      if(item.rightList!=undefined){
+                    item.rightList.map((ite,index)=>{
+                            
+                                let  as=ite;
+                           this.state.role.map((itm,index)=>{
+
+                                        if(as==itm.id){
+
+                                            rol.push(itm);
+
+
+                                        }
+
+
+
+
+                   }) 
+
+                    })   
+                  }
+                   
               let  putin={
                 key:(c.length+1).toString(),  
                  role: item.name,
-             
+                 rightList:rol,
                 id:item.id,
                  idx:c.length+1,
                  
@@ -142,7 +186,7 @@ constructor(){
         let data=
         {
      name: name,
-    
+     rightList:this.state.organization,
   
      }
      axios.post(`${url}/role/add`,data)
@@ -169,6 +213,7 @@ handleOk2=()=>{
     
         let data=
         {
+   rightList:this.state.organization,       
   name: account,
   id:this.state.update,
 }
@@ -265,92 +310,7 @@ zhansh=(orderNo)=>{
 
 }
 
-group=()=>{
- let  d=[];
-     let   c=document.querySelector('.search').value
-      let value=document.querySelector('#idSelect').value;
-      if(value==1){
-        let cid=document.cookie.match(new RegExp("(^| )pcompany=([^;]*)(;|$)"));
-           axios.get(`${url}/account/getlist`)
-   .then(res=>{
-        
-       this.setState({
-     invodata:res.data,
-    
-    });  
-    this.state.invodata.map((item,index)=>
 
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-
-         
-        })
-        .catch(err=>console.log(err))
-
-      }
-     else if(value==2){
-        axios.get(`${url}/Invoice/getListNoGroup?id=1`)
-   .then(res=>{
-        
-       this.setState({
-     invodata:res.data,
-  
-      
-    });  
-    this.state.invodata.map((item,index)=>
-
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-
-         
-        })
-        .catch(err=>console.log(err))
-     }
-     else if(value==0){
-      let cid=document.cookie.match(new RegExp("(^| )pcompany=([^;]*)(;|$)"));
-           axios.get(`${url}/Invoice/getListByCompanyID?id=${unescape(cid[2])}`)
-   .then(res=>{
-      
-        this.setState({
-     invodata:res.data,
-  
-      
-    }); 
- 
-    this.state.invodata.map((item,index)=>
-
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-       
-        })
-        .catch(err=>console.log(err))
-
-     }
-    
-     
-
-}
 update=(value)=>{
 
    // console.log( this.state.data);
@@ -405,7 +365,14 @@ handleChange=(value)=>{
  
    
 }
-
+handleChange1=(value)=>{
+  this.setState({
+            
+            organization:value,
+             
+            });
+  
+}
   render() {
       
     const columns = [{
@@ -418,16 +385,16 @@ handleChange=(value)=>{
   dataIndex: 'role',
   key: 'role',
 }, 
-//   {
-//   title: '角色权限',
-//   key: 'rightList',
-//   dataIndex: 'rightList',
-//   render: rightList => (
-//     <span>
-//       {rightList.map(rightList => <Tag color="blue" key={rightList.name}>{rightList.name}</Tag>)}
-//     </span>
-//   ),
-// },
+  {
+  title: '角色权限',
+  key: 'rightList',
+  dataIndex: 'rightList',
+  render: rightList => (
+    <span>
+      {rightList.map(rightList => <Tag color="blue" key={rightList.name}>{rightList.name}</Tag>)}
+    </span>
+  ),
+},
 {
   title: '操作',
   key: 'action',
@@ -469,7 +436,7 @@ for (let i = 10; i < 36; i++) {
 
 
     return (
-          <div  className="invoice">
+          <div  >
           <div>
             
            
@@ -488,7 +455,20 @@ for (let i = 10; i < 36; i++) {
             <div  className="add-user">
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>角色名称：
               <Input type="text" style={{'lineHeight':'30px','width':'200px','marginLeft':'13px'}}  className='account'/></p>
+                 <p style={{'lineHeight':'40px','textAlign':'left'}}>角色权限：
+              <Select
+                mode="multiple"
+                 style={{ width: '200px' }}
+                 placeholder="请选择组织机构"
+   
+                 onChange={this.handleChange1}
+              >
+                { this.state.role.map((item,index)=>
+                     <Option key={index} value={item.id}>{item.name}</Option>
 
+                    )}
+                  </Select>
+              </p>
              
               </div>
               </Modal>
@@ -511,7 +491,20 @@ for (let i = 10; i < 36; i++) {
                 <div  className="add-user">
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>角色名称：
                 <Input type="text" style={{'lineHeight':'30px','width':'200px','marginLeft':'13px'}} defaultValue={item.role} className='account2'/></p>
-              
+                  <p style={{'lineHeight':'40px','textAlign':'left'}}>角色权限：
+              <Select
+                mode="multiple"
+                 style={{ width: '200px' }}
+                 placeholder="请选择组织机构"
+   
+                 onChange={this.handleChange1}
+              >
+                { this.state.role.map((item,index)=>
+                     <Option key={index} value={item.id}>{item.name}</Option>
+
+                    )}
+                  </Select>
+              </p>
                </div>
                </Modal>:''
        
