@@ -10,8 +10,8 @@ const Option = Select.Option;
     
 
 class regiont extends Component {
-constructor(){
-    super()
+constructor(props){
+    super(props)
     this.state={
       visible:false,
       visible1:false,
@@ -38,16 +38,22 @@ constructor(){
   }
   
   componentDidMount(){
-  
 
-
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
       // let  c=document.querySelector("#chandi");
       // c.option.add(new Option("22","22"));
       let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
   
-   axios.get(`${url}/organization/getlist`)
+   axios.get(`${url}/organization/getlist`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-       console.log(res);
+       if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
        let c=[];  
           res.data[0].children.map((item,index)=>{
                  
@@ -100,13 +106,13 @@ constructor(){
 
 
         )
-           console.log(d);
+           
             this.setState({
              data2:d,
              data3:d,
              
             });
-       
+       }
         })
         .catch(err=>console.log(err))
         
@@ -159,7 +165,7 @@ constructor(){
              
             }); 
 
-           console.log(this.state.data3)
+          
         }
 
 
@@ -207,6 +213,9 @@ constructor(){
          let account=document.querySelector('.account').value;
          let address=document.querySelector('.address').value;
          let phoneNo=document.querySelector('.phoneNo').value;
+      
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
     let map=this.state.id;
    if(map==0){alert('请选择相应的大区')}
           
@@ -224,15 +233,21 @@ constructor(){
   parentID:map,
   
 }
-     axios.post(`${url}/Organization/Add`,data)
-   .then(res=>{
+     axios.post(`${url}/Organization/Add`,data,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
+   .then(res=>{if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
      message.success(`办事处添加成功`);
       
             this.setState({
       visible: false,
 
     });
-       window.location.reload(true);
+       window.location.reload(true);}
         })
         .catch(err=>console.log(err))
 
@@ -244,13 +259,7 @@ constructor(){
 
   
 
-  //   let yonghuming=document.querySelector('.yonghuming').value
-  //   let jiumima=document.querySelector('.jiumima').value
-  //   console.log(yonghuming)
-    
-
-  // document.querySelector('.yonghuming').value=''
-  //   document.querySelector('.jiumima').value=''
+  
 
   }
 handleOk2=()=>{
@@ -259,7 +268,9 @@ handleOk2=()=>{
    let account=document.querySelector('.account2').value;
          let address=document.querySelector('.address2').value;
          let phoneNo=document.querySelector('.phoneNo2').value;
-         // console.log(address,phoneNo);
+     
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
     let map=this.state.id1;
    if(map==0){alert('请选择相应的大区')}
           
@@ -277,8 +288,14 @@ handleOk2=()=>{
   parentID:map,
   id:this.state.update,
 }
-     axios.post(`${url}/Organization/Update`,data)
-   .then(res=>{
+     axios.post(`${url}/Organization/Update`,data,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
+   .then(res=>{if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
      message.success(`办事处修改成功`);
       
             this.setState({
@@ -287,7 +304,7 @@ handleOk2=()=>{
     });
 
    
-       window.location.reload(true);
+       window.location.reload(true);}
         })
         .catch(err=>console.log(err))
 
@@ -363,92 +380,7 @@ zhansh=(orderNo)=>{
 
 }
 
-group=()=>{
- let  d=[];
-     let   c=document.querySelector('.search').value
-      let value=document.querySelector('#idSelect').value;
-      if(value==1){
-        let cid=document.cookie.match(new RegExp("(^| )pcompany=([^;]*)(;|$)"));
-           axios.get(`${url}/account/getlist`)
-   .then(res=>{
-        
-       this.setState({
-     invodata:res.data,
-    
-    });  
-    this.state.invodata.map((item,index)=>
 
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-
-         
-        })
-        .catch(err=>console.log(err))
-
-      }
-     else if(value==2){
-        axios.get(`${url}/Invoice/getListNoGroup?id=1`)
-   .then(res=>{
-        
-       this.setState({
-     invodata:res.data,
-  
-      
-    });  
-    this.state.invodata.map((item,index)=>
-
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-
-         
-        })
-        .catch(err=>console.log(err))
-     }
-     else if(value==0){
-      let cid=document.cookie.match(new RegExp("(^| )pcompany=([^;]*)(;|$)"));
-           axios.get(`${url}/Invoice/getListByCompanyID?id=${unescape(cid[2])}`)
-   .then(res=>{
-      
-        this.setState({
-     invodata:res.data,
-  
-      
-    }); 
- 
-    this.state.invodata.map((item,index)=>
-
-      item.no.indexOf(c, 0)==-1? "":d.push(item)
-
-
-)
- this.setState({
-     invodata:d,
-    fendata:d.slice(0,10),
-      
-    }); 
-       
-        })
-        .catch(err=>console.log(err))
-
-     }
-    
-     
-
-}
 update=(value)=>{
 
    
@@ -475,12 +407,20 @@ update=(value)=>{
 }
 remove=(value)=>{
 
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
 
         let  id=value;
-axios.get(`${url}/Organization/Remove/${id}`)
-   .then(res=>{
+axios.get(`${url}/Organization/Remove/${id}`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
+   .then(res=>{if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
          alert('办事处删除成功');
-       window.location.reload(true);
+       window.location.reload(true);}
         })
         .catch(err=>alert('办事处删除失败'))
 
@@ -510,21 +450,27 @@ useradd=()=>{
       
     const columns = [{
   title: '序号',
+  align:'center',
   dataIndex: 'idx',
   key: 'idx',
 },{
   title: '办事处名称',
+  align:'center',
   dataIndex: 'name',
   key: 'name',
 },  {
   title: '办事处地址',
+  align:'center',
   dataIndex: 'address',
   key: 'address',
 },{
   title: '办事处电话',
+  align:'center',
   dataIndex: 'phoneNo',
   key: 'phoneNo',
 }, {
+  className:'action',
+  align:'center',
   title: '操作',
   key: 'action',
   render: (text, record) => (
@@ -556,20 +502,18 @@ const options = [{
   
 }];
 
-// function onChange(value) {
-//   console.log(value);
-// }
+
 
 
     return (
           <div  >
-          <div>
+          <div style={{'float':'left'}}>
             
              <Select id="map"  style={{'width':'150px'}} defaultValue="0" onChange={this.map}>
                <Option  key='0'   value='0'>所有大区</Option>
-         {
+         {this.state.data.length==0?
 
-             this.state.data.map((item,index)=>
+            '' :this.state.data.map((item,index)=>
                 <Option  key={index+1}   value={item.id} >{item.area}</Option>
                 
                 )}
@@ -578,7 +522,7 @@ const options = [{
             &nbsp;&nbsp;
           <Button   onClick={this.useradd.bind()}>添加办事处</Button> &nbsp;&nbsp;&nbsp;&nbsp; <a   onClick={this.upload.bind(this,2)} >文档导入</a>
           </div>
-          <br/>
+          <br/><br/>
           <Modal 
           className="adduser"
                 title="办事处添加"
@@ -592,9 +536,9 @@ const options = [{
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>选择大区：&nbsp;&nbsp;&nbsp;&nbsp;
                <Select className="map"  style={{'width':'150px'}}  onChange={this.map1}>
                
-         {
+         {this.state.data.length==0?
 
-             this.state.data.map((item,index)=>
+             '':this.state.data.map((item,index)=>
                 <Option  key={index+1}   value={item.id} >{item.area}</Option>
                 
                 )}
@@ -628,9 +572,9 @@ const options = [{
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>选择大区：&nbsp;&nbsp;&nbsp;&nbsp;
                <Select className="map"  style={{'width':'150px'}}  onChange={this.map2}  >
                
-         {
+         {this.state.data.length==0?
 
-             this.state.data.map((item,index)=>
+            '':this.state.data.map((item,index)=>
                 <Option  key={index+1}   value={item.id} >{item.area}</Option>
                 
                 )}

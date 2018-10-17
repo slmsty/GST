@@ -7,8 +7,8 @@ import './upmassage.css';
 
 
 class upmassage extends Component {
-constructor(){
-    super()
+constructor(props){
+    super(props)
     this.state={
       visible1:false,
       viaibal:false,
@@ -53,6 +53,8 @@ constructor(){
    }
   
   render() {
+     let access_token=sessionStorage.getItem('access_token');
+       let            token_type=sessionStorage.getItem('token_type');
      const columns = [{
   title: '序号',
   dataIndex: 'idx',
@@ -115,33 +117,44 @@ const data = [{
   name: 'file',
   action: `${url}/Account/Import`,
   headers: {
-    authorization: 'authorization-text',
+     authorization: `${ token_type } ${ access_token }`,
   },
 showUploadList:false,
   onChange(info) {
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+      
     }
     if (info.file.status === 'done') {
-      message.success(`${info.file.name} 文件上传成功`);
+      if(info.file.response.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
+      message.success(`${info.file.name} 文件上传成功`);}
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} 文件上传失败，请确认文档格式是否正确`);
     }
   }
 }
+ 
 const props2 = {
   name: 'file',
   action: `${url}/Organization/Import`,
   headers: {
-    authorization: 'authorization-text',
+   
+     authorization: `${ token_type } ${ access_token }`,
   },
 showUploadList:false,
   onChange(info) {
     if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList);
+      
     }
-    if (info.file.status === 'done') {
-      message.success(`${info.file.name} 文件上传成功`);
+    if (info.file.status === 'done') {if(info.file.response.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
+      message.success(`${info.file.name} 文件上传成功`);}
     } else if (info.file.status === 'error') {
       message.error(`${info.file.name} 文件上传失败，请确认文档格式是否正确`);
     }

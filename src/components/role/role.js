@@ -10,8 +10,8 @@ const Option = Select.Option;
     
 
 class role extends Component {
-constructor(){
-    super()
+constructor(props){
+    super(props)
     this.state={
       visible:false,
       visible1:false,
@@ -29,19 +29,39 @@ constructor(){
       update:'',
       role:[],
       organization:[],
-
+      default1:[],
+      role1:0,
     }
   
   }
   
   componentDidMount(){
-       axios.get(`${url}/Role/GetRightsList`)
+
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
+       axios.get(`${url}/Role/GetRightsList`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-         console.log(res);
+         if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else
+     if(
+            res.data.message=='No Rights'
+      ){
+              
+           message.info('用户没有权限，请退出登录');
+             
+     }
+
+    else
+     {
         this.setState({
              role:res.data,
 
-        });
+        });}
         
         })
         .catch(err=>console.log(err))
@@ -50,12 +70,18 @@ constructor(){
       // c.option.add(new Option("22","22"));
       let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
   
-   axios.get(`${url}/role/getlist`)
+   axios.get(`${url}/role/getlist`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-       console.log(res);
+       if(res.data.message=="Please Login First."){
+
+        
+
+     }else{console.log(res);
        let c=[];  
           res.data.map((item,index)=>{
-
+                     
                         let   rol=[];
                       if(item.rightList!=undefined){
                     item.rightList.map((ite,index)=>{
@@ -93,28 +119,32 @@ constructor(){
           })
             this.setState({
              data:c,
-            });
+            
+            });}
        
         })
         .catch(err=>console.log(err))
         
 
-   //      axios.get(`${url}/organization/getlist`)
-   // .then(res=>{
-   //     console.log(res);
-       
-   //      })
-   //      .catch(err=>console.log(err))
-
+  
       
  
 
   }
  
  getlist=()=>{
-axios.get(`${url}/role/getlist`)
+
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
+axios.get(`${url}/role/getlist`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-       console.log(res);
+       if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
        let c=[];  
           res.data.map((item,index)=>{
 
@@ -155,7 +185,7 @@ axios.get(`${url}/role/getlist`)
           })
             this.setState({
              data:c,
-            });
+            });}
        
         })
         .catch(err=>console.log(err))
@@ -178,6 +208,9 @@ axios.get(`${url}/role/getlist`)
   }
 
   handleOk = (e) => {
+
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
          let name=document.querySelector('.account').value;
     let rightList=sessionStorage.getItem('role');
 
@@ -189,15 +222,22 @@ axios.get(`${url}/role/getlist`)
      rightList:this.state.organization,
   
      }
-     axios.post(`${url}/role/add`,data)
+     axios.post(`${url}/role/add`,data,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
+    if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
      message.success(`角色添加成功`);
 document.querySelector('.account').value='';
       this.getlist();
             this.setState({
       visible: false,
 
-    });
+    });}
        
         })
         .catch(err=>message.error('角色添加失败'))
@@ -209,6 +249,9 @@ document.querySelector('.account').value='';
 
   }
 handleOk2=()=>{
+
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
   let account=document.querySelector('.account2').value;
     
         let data=
@@ -217,16 +260,22 @@ handleOk2=()=>{
   name: account,
   id:this.state.update,
 }
-axios.post(`${url}/role/update`,data)
+axios.post(`${url}/role/update`,data,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-   
+    if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
      message.success(`修改成功`);
      document.querySelector('.account2').value='';
         this.setState({
       visible1: false,
       update:'',
        });
-          this.getlist();
+          this.getlist();}
         })
         .catch(err=>console.log(err))
 
@@ -313,17 +362,31 @@ zhansh=(orderNo)=>{
 
 update=(value)=>{
 
-   // console.log( this.state.data);
+
  
   this.state.data.map((item,index)=>
 
        {if(item.id===value)
        {
+            let  c=[];
+          
+          if(item.rightList.length!=0){
+              item.rightList.map((item,index)=>{
+                 
+          
+                 c.push(item.id);
+               
+
+
+              })
+          }
+          
         this.setState({
-         
+               organization:c,
+                default1:c,
                 update:value,
                 visible1:true,
-
+                
           })  
  
        }
@@ -336,7 +399,11 @@ update=(value)=>{
 
 }
 remove=(value)=>{
-    axios.get(`${url}/Role/Remove/${value}`)
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
+    axios.get(`${url}/Role/Remove/${value}`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
            message.success(`删除成功`);
    
@@ -351,7 +418,7 @@ remove=(value)=>{
 
 }
 useradd=()=>{
-   console.log(1)
+   
      this.setState({
          visible:true,
 
@@ -379,7 +446,7 @@ handleChange1=(value)=>{
   title: '序号',
   dataIndex: 'idx',
   key: 'idx',
-  render: text => <a href="javascript:;">{text}</a>,
+  render: text => <p>{text}</p>,
 }, {
   title: '角色名称',
   dataIndex: 'role',
@@ -391,7 +458,7 @@ handleChange1=(value)=>{
   dataIndex: 'rightList',
   render: rightList => (
     <span>
-      {rightList.map(rightList => <Tag color="blue" key={rightList.name}>{rightList.name}</Tag>)}
+      {rightList.map(rightList => <p key={rightList.name}>{rightList.name}</p>)}
     </span>
   ),
 },
@@ -440,9 +507,9 @@ for (let i = 10; i < 36; i++) {
           <div>
             
            
-          <Button  onClick={this.useradd.bind()}>添加角色</Button>
+          <Button  onClick={this.useradd.bind()} style={{'float':'left'}}>添加角色</Button>
           </div>
-          <br/>
+          <br/><br/>
           <Modal 
           className="adduser"
                 title="新建角色"
@@ -463,7 +530,7 @@ for (let i = 10; i < 36; i++) {
    
                  onChange={this.handleChange1}
               >
-                { this.state.role.map((item,index)=>
+                {this.state.role.length==0? '':this.state.role.map((item,index)=>
                      <Option key={index} value={item.id}>{item.name}</Option>
 
                     )}
@@ -496,11 +563,11 @@ for (let i = 10; i < 36; i++) {
                 mode="multiple"
                  style={{ width: '200px' }}
                  placeholder="请选择组织机构"
-   
+                 defaultValue={this.state.default1}
                  onChange={this.handleChange1}
               >
-                { this.state.role.map((item,index)=>
-                     <Option key={index} value={item.id}>{item.name}</Option>
+                {this.state.role.length==0? '' :this.state.role.map((item,index)=>
+                    <Option key={index} value={item.id}>{item.name}</Option>
 
                     )}
                   </Select>
@@ -518,7 +585,7 @@ for (let i = 10; i < 36; i++) {
 
 
             }
-             
+           
              <Table columns={columns} dataSource={this.state.data} />
           </div>
         );

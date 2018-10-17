@@ -6,8 +6,8 @@ import {url} from '../config'
 import "./login.css";
 
 class login extends Component {
-constructor(){
-    super()
+constructor(props){
+    super(props)
     this.state={
       visible1:false,
       viaibal:false,
@@ -17,6 +17,10 @@ constructor(){
       checked:0,
       data:[],
       id:'',
+      url:'http://gst.bclzdd.com',
+      access_token:'',
+          token_type:'',
+
     }
   
   }
@@ -55,24 +59,7 @@ constructor(){
   }
    
  }
- axios.get(`${url}/account/getlist`)
-   .then(res=>{
-       console.log(res);
-       let c=[];  
-          res.data.map((item,index)=>{
-                 
-              
-          
-        c.push(item);
-          
-
-          })
-            this.setState({
-             data:c,
-            });
-       
-        })
-        .catch(err=>console.log(err))
+ 
 
 
 
@@ -85,52 +72,90 @@ constructor(){
  let  point=document.querySelector(".red");
   if(cou=="")
   {
+      message.info('请输入账号');
 
-     alert("请输入账号");
 
   }
   else if(pas==""){
+     message.info('请输入密码');
 
-    alert("请输入密码");
 
   }
    else{
-      let data={
-         username:cou.trim(),
-        password:pas.trim()
-
-      }
+   
+       let  username=cou.trim();
+       let password=pas.trim();
+       
+  
     
-     axios.post(`${url}/account/Login`, data)
+    // axios.post(`${this.state.url}/connect/token`,`client_id=client2&client_secret=secret&username=${username}&password=${password}&grant_type=password`)
+    //   .then(res=>console.log(res))
+    //   .catch(err=>message.info(err.response.data.error_description))
+
+     axios.post(`${this.state.url}/connect/token`,`client_id=client2&client_secret=secret&username=${username}&password=${password}&grant_type=password`)
             .then(res =>{
-              
-                   
+                    sessionStorage.setItem('access_token',res.data.access_token);
+                    sessionStorage.setItem('token_type',res.data.token_type);
+                    this.setState({
+      access_token:res.data.access_token,
+      token_type:res.data.token_type,
+        })
+
+                  
+
                 if(res.data==''){
-                    
-                       alert('账号或密码不正确');
+                       message.info('账号或密码不正确');
+                
                      }
 
                else
 
                      {
+                       let access_token=sessionStorage.getItem('access_token');
+                     let    token_type=sessionStorage.getItem('token_type'); 
+                           axios.get(`${url}/Account/GetOperationLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
+                         Authorization: `${ token_type } ${ access_token }`
+                          }})
+                        .then(res=>{
+                        if(res.data.message=="Please Login First."){
 
-                         if(point.checked){
+       
+
+                         }else if(
+                                res.data.message=='No Rights'
+                       ){       console.log(res);
+                                            
+                          message.info('用户没有权限');
+              
+                  }
+                  else{
+            
+              
+                             message.info('用户有权限');
+        
+                       }
+             })
+                .catch(err=>console.log(err))
+
+
+
+
+                     //     if(point.checked){
            
-                         this.SetCookie("checked0",1)
-                         this.SetCookie("account0",cou)
-                          this.SetCookie("password0",pas)
-                     }
-                       else{
-                         this.SetCookie("checked0",0)
-                      }
-                         sessionStorage.setItem('uname',res.data.userName);
-                         sessionStorage.setItem('uid',res.data.id);
-                        sessionStorage.setItem('account',cou);
-                        sessionStorage.setItem('password',pas);
-                      // this.SetCookie("pcompany1",res.data.data.companyID);
-                      // this.SetCookie("pcn",res.data.data.companyName);
-                     //      console.log(res);
-                     this.props.history.push("./main");
+                     //     this.SetCookie("checked0",1)
+                     //     this.SetCookie("account0",cou)
+                     //      this.SetCookie("password0",pas)
+                     // }
+                     //   else{
+                     //     this.SetCookie("checked0",0)
+                     //  }
+                     //     sessionStorage.setItem('uname',res.data.userName);
+                     //     sessionStorage.setItem('uid',res.data.id);
+                     //    sessionStorage.setItem('account',cou);
+                     //    sessionStorage.setItem('password',pas);
+                    
+                     // this.props.history.push("./main");
+                     // console.log(res);
 
                       }
                     
@@ -141,7 +166,11 @@ constructor(){
 
 
             })
-            .catch(err=>console.log(err))
+            .catch(err=>{
+                     console.log(err);
+                        if(err.response!==undefined){
+
+              message.info(err.response.data.error_description)}})
 
          
 
@@ -174,13 +203,13 @@ constructor(){
  
   if(cou=="")
   {
-
-     alert("请输入账号");
+ message.info('请输入账号');
+ 
 
   }
   else if(pas==""){
+ message.info('请输入密码');
 
-    alert("请输入密码");
 
   }
    else{
@@ -216,13 +245,13 @@ constructor(){
 
       })
        if(acou==false){
-
-         alert('账号不正确');
+         message.info('账号不正确');
+     
 
 
        }else if(pass==false){
-
-           alert('密码不正确');
+ message.info('密码不正确');
+         
 
        }else{
          document.querySelector('.yonghuming').value=''; 
@@ -254,28 +283,29 @@ constructor(){
          let oldpasswordset=new Set(newpassword.split(""));
          
          if(newpassword==''){
-
-            alert("请输入新密码");
+ message.info('请输入新密码');
+        
 
          }
          else if(newpassword2=='')
          {
-                alert("请确认新密码");
+           message.info('请确认新密码');
+            
 
          }
          else if(newpassword!=newpassword2){
-
+               message.info('两次密码输入不一致！');
                  
-              alert("两次密码输入不一致！");
+          
 
          }
          else if(old.test(newpassword)==false){
-
-                  alert("请输入5~20位数字或字母作为密码"); 
+                message.info('请输入5~20位数字或字母作为密码');
+             
          }
          else  if(oldpasswordset.size==1){
-
-              alert('密码不能完全一致');
+                message.info('密码不能完全一致');
+         
          }
          else{
                let  data={
@@ -287,8 +317,8 @@ constructor(){
                }
                 axios.post(`${url}/Account/ChangePassword`, data)
             .then(res =>{
-                 
-                  alert("修改密码成功");
+                   message.info('修改密码成功');
+               
                     this.setState({
                        visible: false,
                           visible2: false,
@@ -373,7 +403,7 @@ getCookie=(name)=>//取cookies函数
                <input type="radio" name="colors" className="red"  onClick={this.radioclick} />记住密码<br/><br/>
               <Button type="primary"  onClick={this.tiao}>登录 </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               <Button type="primary"  onClick={this.xiugai}>修改密码</Button> <br/><br/>
+              
                 <Modal
                 title="修改密码"
                 visible={this.state.visible}

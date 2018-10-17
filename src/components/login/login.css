@@ -4,21 +4,27 @@ body { height: 100%; padding: 0; margin: 0; }
 margin: 0px;}
 .background{
   min-width: 1000px;
- margin-top: 200px;
-height:500px;
+ margin-top: 20vh;
+height:400px;
 position: absolute;
  background-image: url('../../image/kidde.jpg'); 
    background-repeat: no-repeat;
   background-size:100% 100% ;
+    position: absolute;
+          top: 50%;
+   
+           margin-top: -200px; 
 width: 100%;
 }
 .login{
+  min-width: 1000px;
     height:100vh;
+    min-height: 800px;
 width: 100%;
 position: absolute;
 margin-top: 0px;
 margin-left: 0px;
- overflow: scroll;
+
 /*background: -webkit-linear-gradient(#ffffff, #666666); 
     background: -o-linear-gradient(#ffffff, #666666); 
     background: -moz-linear-gradient(#ffffff, #666666); 
@@ -27,18 +33,21 @@ margin-left: 0px;
 }
 .board{
  
-            height:400px;
+            height:330px;
            
             position:absolute;/*设定水平和垂直偏移父元素的50%，
 再根据实际长度将子元素上左挪回一半大小*/
            right:100px;
-            
+      
             margin-left: 0px;
-            margin-top: 50px;
+           position: absolute;
+          top: 50%;
+   
+           margin-top: -170px; 
             background-color: white; 
             border-radius: 10px;
             background-color:rgba(255,255,255,1);
-            width:350px;
+            width:300px;
 }
 .boardin{
   width:80%;

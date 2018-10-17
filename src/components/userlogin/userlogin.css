@@ -1,0 +1,21 @@
+*{padding: 0px;
+margin: 0px;}
+.zhu{
+	
+	
+	height:90vh;
+	width: 100%;
+	
+}
+.a{
+position: absolute;
+}
+.q{ background-color: rgba(255, 255, 255,0);
+	float: left;
+	height: 25vh;
+	width: 20%;
+	text-align: center;
+	line-height: 25vh;
+	font-size: 3vh;
+	color: black;
+}

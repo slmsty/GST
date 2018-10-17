@@ -10,8 +10,8 @@ import "./region.css";
     
 
 class region extends Component {
-constructor(){
-    super()
+constructor(props){
+    super(props)
     this.state={
       visible:false,
       visible1:false,
@@ -35,13 +35,21 @@ constructor(){
   componentDidMount(){
   
    
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
       // let  c=document.querySelector("#chandi");
       // c.option.add(new Option("22","22"));
       let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
   
-   axios.get(`${url}/organization/getlist`)
+   axios.get(`${url}/organization/getlist`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-       console.log(res);
+       if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
        let c=[];  
           res.data[0].children.map((item,index)=>{
                  
@@ -60,25 +68,13 @@ constructor(){
           })
             this.setState({
              data:c,
-            });
+            });}
        
         })
         .catch(err=>console.log(err))
    
 
-   //      axios.get(`${url}/organization/getlist`)
-   // .then(res=>{
-   //     console.log(res);
-       
-   //      })
-   //      .catch(err=>console.log(err))
-
-   //      axios.get(`${url}/role/getlist`)
-   // .then(res=>{
-   //     console.log(res);
-       
-   //      })
-   //      .catch(err=>console.log(err))
+  
  
 
   }
@@ -99,22 +95,30 @@ constructor(){
 
   handleOk = (e) => {
          let account=document.querySelector('.account').value;
-   
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
         let data=
         {
   name: account,
   parentID:"98ef99bb-459d-4529-78f5-08d61c44a396",
   
 }
-     axios.post(`${url}/Organization/Add`,data)
+     axios.post(`${url}/Organization/Add`,data,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
+    if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
     alert('添加大区成功')
       
             this.setState({
       visible: false,
 
     });
-       window.location.reload(true);
+       window.location.reload(true);}
         })
         .catch(err=>console.log(err))
 
@@ -132,22 +136,30 @@ constructor(){
   }
 handleOk2=()=>{
    let account=document.querySelector('.account2').value;
-   
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
         let data=
         {
   name: account,
   parentID:"98ef99bb-459d-4529-78f5-08d61c44a396",
   id:this.state.update,
 }
-     axios.post(`${url}/Organization/Update`,data)
+     axios.post(`${url}/Organization/Update`,data ,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
+    if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
     alert('修改大区成功')
       
           this.setState({
       visible1: false,
       update:'',
     });
-       window.location.reload(true);
+       window.location.reload(true);}
         })
         .catch(err=>console.log(err))
 
@@ -321,7 +333,7 @@ group=()=>{
 }
 update=(value)=>{
 
-   console.log( value);
+
  
   this.state.data.map((item,index)=>
 
@@ -345,17 +357,25 @@ update=(value)=>{
 }
 remove=(value)=>{
 
+  let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
 
    this.state.data.map((item,index)=>
 
        {if(item.id==value)
        {
         if(item.child.length==0){
-             axios.get(`${url}/Organization/Remove/${value}`)
+             axios.get(`${url}/Organization/Remove/${value}`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
    .then(res=>{
-      
+      if(res.data.message=="Please Login First."){
+
+         message.info('用户信息失效，请重新登录！')
+
+     }else{
            alert('大区删除成功');
-           window.location.reload(true);
+           window.location.reload(true);}
         })
         .catch(err=>console.log(err))
             
@@ -380,7 +400,7 @@ remove=(value)=>{
 
 }
 useradd=()=>{
-   console.log(1)
+   
      this.setState({
          visible:true,
 
@@ -392,15 +412,20 @@ useradd=()=>{
     const columns = [{
   title: '序号',
   dataIndex: 'idx',
+  className:'list',
+   align:'center',
   key: 'idx',
   render: text => <a href="javascript:;">{text}</a>,
 }, {
   title: '大区名称',
+   align:'center',
   dataIndex: 'area',
   key: 'area',
 },  {
   title: '操作',
   key: 'action',
+   className:'action',
+  align:'center',
   render: (text, record) => (
    <span>
 
@@ -437,12 +462,12 @@ const options = [{
 
     return (
           <div  >
-          <div>
+          <div style={{'float':'left'}}>
           
             
           <Button   onClick={this.useradd.bind()}>添加大区</Button>
           </div>
-          <br/>
+          <br/><br/>
           <Modal 
           className="adduser"
                 title="添加大区"
