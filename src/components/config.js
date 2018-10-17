@@ -1,3 +1,3 @@
-const url='http://gst.bclzdd.com/api'
+const url='http://gst.xyvideo.cn/api'
 
 export {url}

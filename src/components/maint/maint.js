@@ -58,7 +58,7 @@ class maint extends Component {
          }
    }
 reback=()=>{
-     let c="../../";
+     
 
    this.props.history.push("./");   
 

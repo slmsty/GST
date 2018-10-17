@@ -32,7 +32,7 @@ class App extends Component {
           <Route path='/' exact component={Login}/>
           <Route path='/main' component={Main}/>
           <Route path='/maint' component={Maint}/>
-           <Route path='/upload' component={Upload}/>
+          
          
         </div>
       </HashRouter>

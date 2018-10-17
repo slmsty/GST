@@ -17,7 +17,7 @@ constructor(props){
       checked:0,
       data:[],
       id:'',
-      url:'http://gst.bclzdd.com',
+      url:'http://gst.xyvideo.cn',
       access_token:'',
           token_type:'',
           shu:0,
@@ -102,7 +102,7 @@ constructor(props){
       token_type:res.data.token_type,
         })
 
-                  
+                  console.log(res);
 
                 if(res.data==''){
                        message.info('账号或密码不正确');
@@ -114,7 +114,7 @@ constructor(props){
                      {
                        
                       
-                          this.test();
+                             
 
 
                          if(point.checked){
@@ -130,44 +130,40 @@ constructor(props){
                          sessionStorage.setItem('uid',res.data.id);
                         sessionStorage.setItem('account',cou);
                         sessionStorage.setItem('password',pas);
-                      if(this.state.shu==1){
-                     this.props.history.push("./maint");}
-                     else  if(this.state.shu==2){
-                           
-                           this.props.history.push("./main");
-
-                     }
-
-                     // console.log(res);
-
-                      }
+                        console.log(this.state.shu)
+                        this.test(res.data.access_token,res.data.token_type);
                     
                  
 
-              
+              }
                   
 
 
             })
             .catch(err=>{
-                     console.log(err);
+                
                         if(err.response!==undefined){
 
               message.info(err.response.data.error_description)}})
 
          
 
-   }       
-
+   } 
+      
+    
   }
 
-  test=()=>{
-               let access_token=sessionStorage.getItem('access_token');
-       let    token_type=sessionStorage.getItem('token_type');
+  test=(value,value2)=>{
+
+               let access_token=value;
+       let    token_type=value2;
+       // console.log(access_token);
+       // console.log(token_type);
            axios.get(`${url}/Account/GetOperationLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
             Authorization: `${ token_type } ${ access_token }`
           }})
      .then(res=>{
+      console.log(res);
         if(res.data.message=="Please Login First."){
 
        
@@ -195,13 +191,18 @@ constructor(props){
             this.setState({
                shu:1,
               });
-         
+     this.props.history.push("./maint");
+                      
+                         
+                    
+                    
      }
      else{
             
               this.setState({
                shu:2,
               });
+              this.props.history.push("./main");
          }
           })
           .catch(err=>console.log(err))
