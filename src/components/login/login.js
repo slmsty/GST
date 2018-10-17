@@ -20,6 +20,7 @@ constructor(props){
       url:'http://gst.bclzdd.com',
       access_token:'',
           token_type:'',
+          shu:0,
 
     }
   
@@ -111,50 +112,32 @@ constructor(props){
                else
 
                      {
-                       let access_token=sessionStorage.getItem('access_token');
-                     let    token_type=sessionStorage.getItem('token_type'); 
-                           axios.get(`${url}/Account/GetOperationLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
-                         Authorization: `${ token_type } ${ access_token }`
-                          }})
-                        .then(res=>{
-                        if(res.data.message=="Please Login First."){
-
-       
-
-                         }else if(
-                                res.data.message=='No Rights'
-                       ){       console.log(res);
-                                            
-                          message.info('用户没有权限');
-              
-                  }
-                  else{
-            
-              
-                             message.info('用户有权限');
-        
-                       }
-             })
-                .catch(err=>console.log(err))
+                       
+                      
+                          this.test();
 
 
-
-
-                     //     if(point.checked){
+                         if(point.checked){
            
-                     //     this.SetCookie("checked0",1)
-                     //     this.SetCookie("account0",cou)
-                     //      this.SetCookie("password0",pas)
-                     // }
-                     //   else{
-                     //     this.SetCookie("checked0",0)
-                     //  }
-                     //     sessionStorage.setItem('uname',res.data.userName);
-                     //     sessionStorage.setItem('uid',res.data.id);
-                     //    sessionStorage.setItem('account',cou);
-                     //    sessionStorage.setItem('password',pas);
-                    
-                     // this.props.history.push("./main");
+                         this.SetCookie("checked0",1)
+                         this.SetCookie("account0",cou)
+                          this.SetCookie("password0",pas)
+                     }
+                       else{
+                         this.SetCookie("checked0",0)
+                      }
+                         sessionStorage.setItem('uname',res.data.userName);
+                         sessionStorage.setItem('uid',res.data.id);
+                        sessionStorage.setItem('account',cou);
+                        sessionStorage.setItem('password',pas);
+                      if(this.state.shu==1){
+                     this.props.history.push("./maint");}
+                     else  if(this.state.shu==2){
+                           
+                           this.props.history.push("./main");
+
+                     }
+
                      // console.log(res);
 
                       }
@@ -178,7 +161,64 @@ constructor(props){
 
   }
 
-  
+  test=()=>{
+               let access_token=sessionStorage.getItem('access_token');
+       let    token_type=sessionStorage.getItem('token_type');
+           axios.get(`${url}/Account/GetOperationLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
+     .then(res=>{
+        if(res.data.message=="Please Login First."){
+
+       
+
+     }else if(
+            res.data.message=='No Rights'
+      ){       console.log(res);
+              this.setState({
+               shu:0
+              });
+            message.info('该用户没有权限')
+     }
+     else{
+            axios.get(`${url}/role/getlist`,{headers:{
+            Authorization: `${ token_type } ${ access_token }`
+          }})
+     .then(res=>{
+        if(res.data.message=="Please Login First."){
+
+       
+
+     }else if(
+            res.data.message=='No Rights'
+      ){
+            this.setState({
+               shu:1,
+              });
+         
+     }
+     else{
+            
+              this.setState({
+               shu:2,
+              });
+         }
+          })
+          .catch(err=>console.log(err))
+              
+             
+        
+         }
+          })
+          .catch(err=>console.log(err))
+ 
+
+
+
+
+
+
+  }
   
   SetCookie=(name,value)=>//两个参数，一个是cookie的名子，一个是值
 {
@@ -187,12 +227,7 @@ constructor(props){
     exp.setTime(exp.getTime() + Days*24*60*60*1000);
     document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
 }
-  xiugai=()=>{
-
-      this.setState({
-      visible: true,
-    });
-  }
+  
 
   handleOk = (e) => {
    
@@ -271,11 +306,7 @@ constructor(props){
 }
   handleOk2=()=>{
 
-   // this.setState({
    
-   //    visible2: false,
-
-   //  });
             let old=/^[0-9a-zA-Z]{5,20}$/;
 
          let  newpassword=document.querySelector('.xinmima').value.replace(/\s/ig,'');

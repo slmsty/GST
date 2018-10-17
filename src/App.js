@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Login from './components/login/login'
 import Main from './components/main/main'
+import Maint from './components/maint/maint'
 import Upload from './components/upload/upload'
 
 import './App.css'
@@ -30,6 +31,7 @@ class App extends Component {
         <div className="bake">
           <Route path='/' exact component={Login}/>
           <Route path='/main' component={Main}/>
+          <Route path='/maint' component={Maint}/>
            <Route path='/upload' component={Upload}/>
          
         </div>
