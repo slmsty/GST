@@ -17,6 +17,7 @@ constructor(props){
       visible1:false,
       viaibal:false,
       visible2:false,
+      visible3:false,
       url:'/',
       baocunok:'',
       checked:0,
@@ -28,6 +29,8 @@ constructor(props){
       data:[],
       data2:[],
        data3:[],
+       data4:[],
+       merge:'',
       update:'',
       id:0,
       id1:0,
@@ -314,6 +317,14 @@ handleOk2=()=>{
  
 
 }
+handleOk3=()=>{
+ this.setState({
+      visible3: false,
+       merge:'',
+    });
+
+
+}
 handleCancel2=()=>{
 
         this.setState({
@@ -323,6 +334,16 @@ handleCancel2=()=>{
 
 
  }
+ handleCancel3=()=>{
+
+        this.setState({
+      visible3: false,
+       merge:'',
+    });
+
+
+ }
+
  handleCancel=()=>{
 
         this.setState({
@@ -405,6 +426,29 @@ update=(value)=>{
 
 
 }
+merge=(value)=>{
+
+ 
+  this.state.data2.map((item,index)=>
+
+       {if(item.id==value)
+       {
+        this.setState({
+         
+                merge:value,
+                visible3:true,
+
+          })  
+ 
+       }
+
+}
+
+    )
+
+
+
+}
 remove=(value)=>{
 
   let access_token=sessionStorage.getItem('access_token');
@@ -446,6 +490,10 @@ useradd=()=>{
      });
   
 }
+handle=(value,value1)=>{
+  console.log(value1+'  '+value);
+    
+}
   render() {
       
     const columns = [{
@@ -475,7 +523,8 @@ useradd=()=>{
   key: 'action',
   render: (text, record) => (
    <span>
-
+      <a  onClick={this.merge.bind(this,record.id)}>合并</a>
+      <Divider type="vertical" />
       <a  onClick={this.update.bind(this,record.id)}>修改</a>
       <Divider type="vertical" />
       <a onClick={this.remove.bind(this,record.id)}>删除</a>
@@ -483,24 +532,7 @@ useradd=()=>{
   ),
 }];
 
-const options = [{
-  value: 'zhejiang',
-  label: 'Zhejiang',
-  children: [{
-    value: '1',
-    label: '1',},{
-    value: 'hangzhou',
-    label: 'Hangzhou',
-    children: [{
-      value: 'xihu',
-      label: 'West Lake',
-    }],
-  }],
-}, {
-  value: 'jiangsu',
-  label: 'Jiangsu',
-  
-}];
+
 
 
 
@@ -600,6 +632,61 @@ const options = [{
 
             }
              
+   {this.state.merge==''? '':
+
+                   this.state.data2.map((item,index)=>
+
+              item.id==this.state.merge?
+                  
+               
+                 <Modal 
+                 className="adduser"
+                title="合并办事处"
+                visible={this.state.visible3}
+                onOk={this.handleOk3}
+                onCancel={this.handleCancel3}
+                width='350px'
+                 style={{'textAlign':'center'}}
+                okText='确定'
+                  cancelText='取消'>
+                <div  >
+                
+            <p style={{'lineHeight':'40px','textAlign':'center'}}>办事处名称：
+              <Input type="text" style={{'lineHeight':'30px','width':'150px'}} defaultValue={item.name} className='account2'/></p>
+               <p style={{'lineHeight':'40px','textAlign':'center'}}>其他办事处： 
+                <Select
+                 
+                   style={{ width: '150px' }}
+                   placeholder="请选其他办事处"
+                    mode="multiple"
+                   onChange={this.handle.bind(this,1)}
+                >
+               
+                  { this.state.data2.map((item,index)=>
+
+                         item.id==this.state.merge ?  '':<Option key={index} value={item.id}>{item.name}</Option>
+
+                      )}
+                    </Select>&nbsp; &nbsp;</p>
+               <p style={{'lineHeight':'40px','textAlign':'center'}}>合并后名称：
+              <Input type="text" style={{'lineHeight':'30px','width':'150px'}} defaultValue={item.phoneNo} className='newname'/></p>
+            
+              </div>
+               </Modal>:''
+       
+ 
+       
+
+
+
+    )
+                  
+
+
+            }
+
+
+
              <Table columns={columns} dataSource={this.state.data3} />
           </div>
         );

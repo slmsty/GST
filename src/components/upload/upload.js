@@ -31,7 +31,7 @@ constructor(props){
         let access_token=sessionStorage.getItem('access_token');
        let            token_type=sessionStorage.getItem('token_type');
 
-   axios.get(`${url}/Account/GetOperationLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
+   axios.get(`${url}/Arrear/GetImportLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
             Authorization: `${ token_type } ${ access_token }`
           }})
    .then(res=>{
@@ -52,14 +52,24 @@ constructor(props){
     if(res.data.result.length==0){}else{
       let c=[]
        res.data.result.map((item,index)=>{
+        let success;
+        if(item.success==true){
+               success='成功'
+
+        }
+        else{
+
+             success='失败'
+
+        }
               let  data={
                      key:index,
                     idx:index+1,
                     userName:item.userInfoUserName,
                     name:item.userInfoName,
                     roleList:item.operation,
-                    time:item.operationTime,
-
+                    time:item.importTime.split('T')[0]+'    '+item.importTime.split('T')[1].substring(0,8),
+                     success:success,
 
               }
         
@@ -88,11 +98,11 @@ constructor(props){
    let id=sessionStorage.getItem('uid');
       let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
         let access_token=sessionStorage.getItem('access_token');
-       let            token_type=sessionStorage.getItem('token_type');
+        let token_type=sessionStorage.getItem('token_type');
 
    let  page=pagination.current;
 
-  axios.get(`${url}/Account/GetOperationLog?pageno=${page}&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
+  axios.get(`${url}/Arrear/GetImportLog?pageno=${page}&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
             Authorization: `${ token_type } ${ access_token }`
           }})
    .then(res=>{
@@ -104,13 +114,24 @@ constructor(props){
     if(res.data.result.length==0){}else{
       let c=[]
        res.data.result.map((item,index)=>{
+         let success;
+        if(item.success==true){
+               success='成功'
+
+        }
+        else{
+
+             success='失败'
+
+        }
               let  data={
                      key:index,
                     idx:index+1+(page-1)*10,
                     userName:item.userInfoUserName,
                     name:item.userInfoName,
                     roleList:item.operation,
-                    time:item.operationTime,
+                    time:item.importTime.split('T')[0]+'    '+item.importTime.split('T')[1].substring(0,8),
+                    success:success,
 
 
               }
@@ -134,57 +155,7 @@ constructor(props){
         .catch(err=>console.log(err))
    
   }
-  dong=()=>{
-
- let id=sessionStorage.getItem('uid');
-      let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
-        let access_token=sessionStorage.getItem('access_token');
-       let            token_type=sessionStorage.getItem('token_type');
-
-   axios.get(`${url}/Account/GetOperationLog?pageno=1&pagesize=10&operation=批量导入应收账款数据EXCEL`,{headers:{
-            Authorization: `${ token_type } ${ access_token }`
-          }})
-   .then(res=>{
-   if(res.data.message=="Please Login First."){
-
-         message.info('用户信息失效，请重新登录！')
-
-     }else{
-    if(res.data.result.length==0){}else{
-      let c=[]
-       res.data.result.map((item,index)=>{
-              let  data={
-                     key:index,
-                    idx:index+1,
-                    userName:item.userInfoUserName,
-                    name:item.userInfoName,
-                    roleList:item.operation,
-                    time:item.operationTime,
-
-
-              }
-        
-      c.push(data);
-
-       })
-       this.setState({
-
-              data:c,
-
-
-       })
-
-    }
-       this.setState({
-      pagination:{total:res.data.pageCount*10},
-    });
-      }
-        })
-        .catch(err=>console.log(err))
-
-
-
-  }
+ 
  download=()=>{
 
    var url='../../image/kidde.jpg';  
@@ -199,49 +170,34 @@ constructor(props){
   title: '序号',
   dataIndex: 'idx',
   key: 'idx',
+   align:'center',
   render: text => <a href="javascript:;">{text}</a>,
-},{
+},
+{
   title: '账号',
+   align:'center',
   dataIndex: 'userName',
   key: 'userName',
-}, {
+}
+,
+ {
   title: '姓名',
+   align:'center',
   dataIndex: 'name',
   key: 'name',
 }, {
   title: '导入时间',
+   align:'center',
   dataIndex: 'time',
   key: 'time',
+}, {
+  title: '导入结果',
+   align:'center',
+  dataIndex: 'success',
+  key: 'success',
 }];
 
-const data = [{
-  key: '1',
-  idx:1,
-  version:'1.0.1',
-  name: '李主任',
-  age: 32,
-  time:'2018-08-02',
-  address: 'New York No. 1 Lake Park',
-  tags: ['nice', 'developer'],
-}, {
-  key: '2',
-  idx:2,
-    version:'1.0.2',
-    time:'2018-08-02',
-  name: '张经理',
-  age: 42,
-  address: 'London No. 1 Lake Park',
-  tags: ['loser'],
-}, {
-  key: '3',
-  idx:3,
-  version:'1.0.3',
-  name: '赵经理',
-  age: 32,
-  time:'2018-08-03',
-  address: 'Sidney No. 1 Lake Park',
-  tags: ['cool', 'teacher'],
-}];
+
      let access_token=sessionStorage.getItem('access_token');
        let token_type=sessionStorage.getItem('token_type');
    
@@ -267,12 +223,25 @@ showUploadList:false,
      
        message.info('用户没有权限');
      }
-     else{
-      message.success(`${info.file.name} 文档上传成功`);}}
+     else if(info.file.response.message=='0 item has been updated!'){
+      console.log(info)
+      message.success(`文档上传成功`);
+
       window.location.reload(true);
 
+    }
+else{
+   console.log(info)
+  message.info('文档上传失败');
+ window.location.reload(true);
+}
+
+  }
+      
+
     } else if (info.file.status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
+      message.error(`文件上传失败`);
+window.location.reload(true);
     }
   }
 }

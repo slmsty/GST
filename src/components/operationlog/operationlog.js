@@ -62,7 +62,7 @@ constructor(props){
                     userName:item.userInfoUserName,
                     name:item.userInfoName,
                     roleList:item.operation,
-                    time:item.operationTime,
+                    time:item.operationTime.split('T')[0]+'    '+item.operationTime.split('T')[1].substring(0,8),
 
 
               }
@@ -114,7 +114,7 @@ constructor(props){
                     userName:item.userInfoUserName,
                     name:item.userInfoName,
                     roleList:item.operation,
-                    time:item.operationTime,
+                    time:item.operationTime.split('T')[0]+'    '+item.operationTime.split('T')[1].substring(0,8),
 
 
               }
@@ -190,24 +190,7 @@ constructor(props){
   
 } ];
 
-const options = [{
-  value: 'zhejiang',
-  label: 'Zhejiang',
-  children: [{
-    value: '1',
-    label: '1'},{
-    value: 'hangzhou',
-    label: 'Hangzhou',
-    children: [{
-      value: 'xihu',
-      label: 'West Lake',
-    }],
-  }],
-}, {
-  value: 'jiangsu',
-  label: 'Jiangsu',
-  
-}];
+
 
 
 

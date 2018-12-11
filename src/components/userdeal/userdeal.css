@@ -42,7 +42,9 @@ margin: 0px;}
 
 .add-user{
   width:400px;
+ 
   margin: auto;
+
 }
 .ant-pagination-item-link,.ant-pagination-item {
   background-color: transparent!important;

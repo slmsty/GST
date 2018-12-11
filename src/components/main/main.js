@@ -26,6 +26,7 @@ class main extends Component {
           
 
  	}
+
    componentDidMount(){
     if(sessionStorage.getItem('account')==''||sessionStorage.getItem('password')==''){
 
@@ -58,7 +59,7 @@ zhanshi=(shu)=>{
    sessionStorage.setItem('choice',shu);
    
       this.componentDidMount();
- // this.props.history.push("./main");
+
  
 }
 
@@ -68,7 +69,7 @@ zhanshi=(shu)=>{
    
      return (
       <div   id="main"><Layout>
-    <Header className="header"   style={{ overflow: 'auto', height: '70px', position: 'fixed', left: 0 ,zIndex:100}}>
+    <Header className="header"   style={{ overflow: 'auto', height: '70px', position: 'fixed', left: 0 ,zIndex:1500}}>
       <div className="logo2" />
        <div className='userInfo' ><span>欢迎，{sessionStorage.getItem('account')} </span>|<span  onClick={this.reback.bind()}>退出</span></div>
     </Header>

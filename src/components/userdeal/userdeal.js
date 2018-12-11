@@ -42,7 +42,15 @@
       }
     
     }
-    
+      componentWillMount() {
+        this._isMounted = true
+       
+}
+
+
+  componentWillUnmount() {
+        this._isMounted = false
+}
     componentDidMount(){
       let id=sessionStorage.getItem('uid');
       let access_token=sessionStorage.getItem('access_token');
@@ -155,12 +163,13 @@
                    organizationList:item.organizationList,
                    role:item.role,
                    userName:item.userName,
-                phoneNo: item.phoneNo,
-               eMail: item.eMail,
-                userinfo:cc,
-                  id:item.id,
-                  password:item.password,
-                  employeeNumber:item.employeeNumber,
+                   phoneNo: item.phoneNo,
+                   eMail: item.eMail,
+                   userinfo:cc,
+                   id:item.id,
+                   imei:item.imei,
+                   password:item.password,
+                   employeeNumber:item.employeeNumber,
                    locked:dd,
                 }  
             
@@ -205,6 +214,7 @@
       // let password=document.querySelector('.password').value.replace(/\s/ig,'');
       let phoneNo=document.querySelector('.phoneNo').value.replace(/\s/ig,'');
       let eMail=document.querySelector('.email').value.replace(/\s/ig,'');
+      let imei=document.querySelector('.imei').value.replace(/\s/ig,'');
       let name=document.querySelector('.name').value.replace(/\s/ig,'');
       let employeeNumber=document.querySelector('.employeeNumber').value ;
            let  regex = /^[1][3,4,5,7,8][0-9]{9}$/;
@@ -261,6 +271,7 @@
             userName: account,
             phoneNo: phoneNo,
             eMail: eMail,
+            imei:imei,
             organizationList:this.state.organization,
             roleList:this.state.role,
           
@@ -292,7 +303,17 @@ let access_token=sessionStorage.getItem('access_token');
 
            }
            else{
+
               message.success(res.data)
+
+    
+           document.querySelector('.account').value='';
+      
+      document.querySelector('.phoneNo').value='';
+     document.querySelector('.email').value='';
+      document.querySelector('.imei').value='';
+     document.querySelector('.name').value='';
+     document.querySelector('.employeeNumber').value='';
            this.setState({
                 visible: false,
                 organizationList:[],
@@ -359,6 +380,7 @@ if(this.state.adtvalue==''){
                    eMail: item.eMail,
                    userinfo:cc,
                    id:item.id,
+                    imei:item.imei,
                    password:item.password,
                    employeeNumber:item.employeeNumber,
                    locked:dd,
@@ -380,7 +402,7 @@ if(this.state.adtvalue==''){
           })
         .catch(err=>console.log(err))
    }else{
-       axios.get(`${url}/Account/GetOperationLog?pageno=${page}&pagesize=10&orgid=${this.state.adtvalue}`,{headers:{
+       axios.get(`${url}/Account/getlist?pageno=${page}&pagesize=10&orgid=${this.state.adtvalue}`,{headers:{
             Authorization: `${ token_type } ${ access_token }`
           }})
    .then(res=>{
@@ -417,6 +439,7 @@ if(this.state.adtvalue==''){
                   eMail: item.eMail,
                   userinfo:cc,
                   id:item.id,
+                   imei:item.imei,
                   password:item.password,
                   employeeNumber:item.employeeNumber,
                    locked:dd,
@@ -451,9 +474,10 @@ if(this.state.adtvalue==''){
   handleOk2=()=>{
       let old=/^[0-9a-zA-Z]{5,20}$/;
       let account=document.querySelector('.account2').value.replace(/\s/ig,'');
-      let password=document.querySelector('.password2').value.replace(/\s/ig,'');
+      // let password=document.querySelector('.password2').value.replace(/\s/ig,'');
       let phoneNo=document.querySelector('.phoneNo2').value.replace(/\s/ig,'');
       let eMail=document.querySelector('.email2').value.replace(/\s/ig,'');
+      let imei=document.querySelector('.imei1').value.replace(/\s/ig,'');
       let name=document.querySelector('.name2').value.replace(/\s/ig,'');
       let employeeNumber=document.querySelector('.employeeNumber2').value.replace(/\s/ig,'');
       let  regex = /^[1][3,4,5,7,8][0-9]{9}$/;
@@ -484,13 +508,14 @@ if(this.state.adtvalue==''){
   {
           let data=
           { 
-            password:password,
+            imei:imei,
+            // password:password,
             name:name,
             employeeNumber:employeeNumber,
             userName: account,
             phoneNo: phoneNo,
             eMail: eMail,
-            imei:'',
+
             id:this.state.update,
             organizationList:this.state.organization,
             roleList:this.state.role,
@@ -600,6 +625,7 @@ if(this.state.adtvalue==''){
                    eMail: item.eMail,
                    userinfo:cc,
                    id:item.id,
+                    imei:item.imei,
                    password:item.password,
                    employeeNumber:item.employeeNumber,
                    locked:dd,
@@ -658,6 +684,7 @@ if(this.state.adtvalue==''){
                   eMail: item.eMail,
                   userinfo:cc,
                   id:item.id,
+                   imei:item.imei,
                   password:item.password,
                   employeeNumber:item.employeeNumber,
                    locked:dd,
@@ -763,7 +790,15 @@ if(this.state.adtvalue==''){
           this.setState({
         visible: false,
       });
-
+ document.querySelector('.account').value='';
+      
+      document.querySelector('.phoneNo').value='';
+     document.querySelector('.email').value='';
+      document.querySelector('.imei').value='';
+     document.querySelector('.name').value='';
+     document.querySelector('.employeeNumber').value='';
+     document.querySelector('.role').defaultValue='';
+     document.querySelector('.organization').defaultValue='';
 
    }
    
@@ -1268,6 +1303,8 @@ if(res.data.message=="Please Login First."){
                 <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='account'/></p>
                <p style={{'lineHeight':'40px','textAlign':'left'}}>电话：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='phoneNo'/></p>
+                <p style={{'lineHeight':'40px','textAlign':'left'}}>imei号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='imei'/></p>
                  <p style={{'lineHeight':'40px','textAlign':'left'}}>E-Mail：&nbsp;&nbsp;&nbsp;&nbsp;
                 <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='email'/></p>
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>姓名：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1279,7 +1316,8 @@ if(res.data.message=="Please Login First."){
                   mode="multiple"
                    style={{ width: '200px' }}
                    placeholder="请选择角色"
-     
+                    className='role'
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
                    onChange={this.handleChange}
                 >
                   { this.state.data2.length==0? '':this.state.data2.map((item,index)=>
@@ -1291,10 +1329,11 @@ if(res.data.message=="Please Login First."){
                 </p>
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>组织机构：
                 <Select
+                  className='organization'
                   mode="multiple"
                    style={{ width: '200px' }}
                    placeholder="请选择组织机构"
-     
+                   getPopupContainer={triggerNode => triggerNode.parentNode}
                    onChange={this.handleChange1}
                 >
                   {this.state.data3.length==0? '':this.state.data3.map((item,index)=>
@@ -1326,6 +1365,8 @@ if(res.data.message=="Please Login First."){
                   <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  readOnly='true' defaultValue={item.userName} className='account2'/></p>
                  <p style={{'lineHeight':'40px','textAlign':'left','display':'none'}} >密码：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <Input type="text" style={{'lineHeight':'30px','width':'200px'}} defaultValue={item.password} className='password2'/></p>
+                  <p style={{'lineHeight':'40px','textAlign':'left'}}>imei号：&nbsp;&nbsp;
+                <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  defaultValue={item.imei} className='imei1'/></p>
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>电话：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                  <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='phoneNo2'  defaultValue={item.phoneNo}/></p>
                  <p style={{'lineHeight':'40px','textAlign':'left'}}>E-Mail：&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1335,12 +1376,14 @@ if(res.data.message=="Please Login First."){
                  <p style={{'lineHeight':'40px','textAlign':'left'}}>工号：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <Input type="text" style={{'lineHeight':'30px','width':'200px'}}  className='employeeNumber2'  defaultValue={item.employeeNumber}/></p>
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>角色：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               
                 <Select
                   mode="multiple"
                    style={{ width: '200px' }}
                    placeholder="请选择角色"
                    defaultValue={this.state.role}
                    onChange={this.handleChange}
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
                 >
                   {this.state.data2.length==0? '':this.state.data2.map((item,index)=>
 
@@ -1350,11 +1393,13 @@ if(res.data.message=="Please Login First."){
                     </Select>
                 </p>
                 <p style={{'lineHeight':'40px','textAlign':'left'}}>组织机构：
+                
                 <Select
                   mode="multiple"
                    style={{ width: '200px' }}
                    placeholder="请选择组织机构"
                    defaultValue={this.state.organization}
+                    getPopupContainer={triggerNode => triggerNode.parentNode}
                    onChange={this.handleChange1}
                 >
                   {this.state.data.length==0? '': this.state.data3.map((item,index)=>
@@ -1364,6 +1409,7 @@ if(res.data.message=="Please Login First."){
                       )}
                     </Select>
                 </p>
+
                 <p><Button   onClick={this.resetPassword.bind(this,item.id,item.userName,item.employeeNumber,item.phoneNo)}> 重置密码</Button> </p>
                  </div>
                  </Modal>:''

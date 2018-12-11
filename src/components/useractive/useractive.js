@@ -39,45 +39,48 @@ constructor(props){
   componentDidMount(){
 
      
-      let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
-        let access_token=sessionStorage.getItem('access_token');
-       let            token_type=sessionStorage.getItem('token_type');
-   axios.get(`${url}/account/getUserLoginLog?pageno=1&pagesize=10`,{headers:{
+    let cid=document.cookie.match(new RegExp("(^| )pcompany1=([^;]*)(;|$)"));
+    let access_token=sessionStorage.getItem('access_token');
+    let            token_type=sessionStorage.getItem('token_type');
+
+      axios.get(`${url}/account/getUserLoginLog?pageno=1&pagesize=10`,{headers:{
+
             Authorization: `${ token_type } ${ access_token }`
-          }})
-   .then(res=>{
-    if(res.data.message=="Please Login First."){
 
-         message.info('用户信息失效，请重新登录！')
+                }})
+       .then(res=>{
+          if(res.data.message=="Please Login First.")
+             {
+              message.info('用户信息失效，请重新登录！')
 
-     }else  if(
-            res.data.message=='No Rights'
-      ){
+            }
+          else  if(res.data.message=='No Rights'){
               
            message.info('用户没有权限，请退出登录');
              
      }
 
-    else{
-        let c=[]
-       console.log(res);
-       res.data.result.map((item,index)=>{
+          else{
+              let c=[]
+              console.log(res);
+              res.data.result.map((item,index)=>{
 
-            let deng="成功";
+               let deng="成功";
 
-              if (item.loginResult==false) {
-                 deng="失败";
-              };
-           let d={
-             key:index,
-            idx:index+1,
-            userName:item.userInfoUserName,
-            name:item.userInfoName,
-            roleList:deng,
-            time:item.loginTime,
-           }
+                 if (item.loginResult==false) {
+                   deng="失败";
+                      };
+              let d={
+                key:index,
+                idx:index+1,
+                userName:item.userInfoUserName,
+                name:item.userInfoName,
+                roleList:deng,
+                time:item.loginTime.split('T')[0]+'    '+item.loginTime.split('T')[1].substring(0,8),
+                    
+                     }
 
-      c.push(d);
+                c.push(d);
 
 
 
@@ -124,12 +127,12 @@ constructor(props){
                  deng="失败";
               };
               let  data={
-                     key:index,
-                    idx:index+1+(page-1)*10,
-                     userName:item.userInfoUserName,
-            name:item.userInfoName,
-            roleList:deng,
-            time:item.loginTime,
+                key:index,
+                idx:index+1+(page-1)*10,
+                userName:item.userInfoUserName,
+                name:item.userInfoName,
+                roleList:deng,
+                time:item.loginTime.split('T')[0]+'    '+item.loginTime.split('T')[1].substring(0,8),
 
               }
         
@@ -204,24 +207,6 @@ constructor(props){
    
   } ];
 
-const options = [{
-  value: 'zhejiang',
-  label: 'Zhejiang',
-  children: [{
-    value: '1',
-    label: '1'},{
-    value: 'hangzhou',
-    label: 'Hangzhou',
-    children: [{
-      value: 'xihu',
-      label: 'West Lake',
-    }],
-  }],
-}, {
-  value: 'jiangsu',
-  label: 'Jiangsu',
-  
-}];
 
 
 
@@ -232,12 +217,6 @@ const options = [{
           <h1>账户登录表</h1>
           </div>
         
-         
- 
-       
-
-
-
              
              <Table columns={columns} dataSource={this.state.data} pagination={this.state.pagination} onChange={this.handleTableChange}/>
           </div>
